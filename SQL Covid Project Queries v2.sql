@@ -38,7 +38,7 @@ order by 1,2
 
 select location, MAX(total_cases) AS HighestInfectionCount, population, MAX((total_cases/population))*100 AS InfectionRate 
 from [Portfolio project]..CovidDeaths$
-group by population, location
+group by population, location, date
 order by InfectionRate desc
 
 --Showing countries with the Highest Death Count per population
@@ -177,6 +177,49 @@ Create view DeathRate as
 select location, date, total_cases, total_deaths, (total_deaths/total_cases)*100 AS DeathPercentage 
 from [Portfolio project]..CovidDeaths$
 --order by 1,2
+
+--Using Tableau Public so cannot link SQL and Tableau together directly - therefore i've had to copy and paste the results from queries below to Excel and onto Tableau manually
+
+--Tableau table 1 
+
+select SUM(new_cases) as total_cases, SUM(cast(new_deaths as int)) as total_deaths, SUM(cast(new_deaths as int))/SUM(new_cases)*100 AS DeathPercentage 
+from [Portfolio project]..CovidDeaths$
+where continent is not null
+
+order by 1,2
+
+--Tableau table 2
+
+select location, MAX(cast(total_deaths as int)) AS TotalDeathCount
+from [Portfolio project]..CovidDeaths$
+where continent is null
+and location not in ('world', 'european union', 'international')
+group by location
+order by TotalDeathCount desc
+
+--Tableau table 3
+
+select location, MAX(cast(total_deaths as int)) AS TotalDeathCount
+from [Portfolio project]..CovidDeaths$
+where continent is not null
+group by location
+order by TotalDeathCount desc
+
+--Tableau table 4
+
+select location, MAX(total_cases) AS HighestInfectionCount, population, MAX((total_cases/population))*100 AS InfectionRate 
+from [Portfolio project]..CovidDeaths$
+group by population, location, date
+order by InfectionRate desc
+
+--Tableau table 5
+
+select date, location, MAX(total_cases) AS HighestInfectionCount, population, MAX((total_cases/population))*100 AS InfectionRate 
+from [Portfolio project]..CovidDeaths$
+group by population, location, date
+order by InfectionRate desc
+
+
 
 
 
